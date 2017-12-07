@@ -26,11 +26,11 @@ import numpy as np
 GR_ABS_DATE_WISE = {}
 GR_PROB_DATE_WISE = {}
     
-for month in ['01','02','03','04','05','06','07','08','09','10','11', '12']:
+for month in ['12']:#['01','02','03','04','05','06','07','08','09','10','11', '12']:
 
     # The input file is data file having all trades of a particular security for 
     # the entire month
-    filename = "DataSet/INFOSYSTCH/INFOSYSTCH_2009" + month
+    filename = "DataSet/INFOSYSTCH/INFOSYSTCH_2008" + month
     
     df = pd.read_csv(filename, sep='|', names=['id','instrument','type','ts','Y','qty'])
     df['date'], df['id'] = df['id'].str.split('.', 1).str
@@ -62,11 +62,13 @@ for month in ['01','02','03','04','05','06','07','08','09','10','11', '12']:
     
     for day_of_the_month in t:
         print("======", day_of_the_month)
-        if(day_of_the_month in ['20090518']):
+        if(day_of_the_month in ['20090518','20080115','20081226']):
             #Handle special cases
-            #Exception as trading was halted that day
+            #20090518 Exception as trading was halted that day
+            #20080115 - Issue in 5min - debug later 
             continue
         df = t[day_of_the_month]
+        df = df[(df.ts > '09:15:00') & (df.ts < '15:29:29' )]
         GR_ABS = {}
         GR_PROB = {}
         for timespan in timespans:
